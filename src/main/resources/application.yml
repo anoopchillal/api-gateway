@@ -9,33 +9,43 @@ spring:
     gateway:
       routes:
         - id: USER-SERVICE
-          uri: http://localhost:3005
+          uri: http://172.17.0.3:3005
           predicates:
             - Path=/users/**
 
         - id: POST-SERVICE
-          uri: http://localhost:3010
+          uri: http://172.17.0.3:3010
           predicates:
             - Path=/posts/**
 
 
         - id: COMMENT-SERVICE
-          uri: http://localhost:3015
+          uri: http://172.17.0.3:3015
           predicates:
-            - Path=//posts/{postId}/comments/**
+            - Path=/posts/{postId}/comments/**
 
 
         - id: LIKE-SERVICE
-          uri: http://localhost:3020
+          uri: http://172.17.0.3:3020
           predicates:
             - Path=/postsOrComments/{postOrCommentId}/**
 
+        - id: AUTHENTICATION-AUTHORIZATION-SERVICE
+          uri: http://172.17.0.3:3000
+          predicates:
+            - Path=/auth/**
+
 eureka:
   client:
-    serviceUrl:
-      register-with-eureka: true
-      fetch-registry: true
-      defaultZone: http://localhost:8761/eureka
-  instance:
-    preferIpAddress: true
-    hostname: localhost
+    service-url:
+      defaultZone: ${eureka_url:http://172.17.0.3:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+    endpoint:
+      health:
+        show-details: always
